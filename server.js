@@ -21,8 +21,6 @@ app.use(express.urlencoded({limit: "10mb", extended: true}));
 
 app.use(errohandler);
 
-
-
 app.use('/api/', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/countries', countryRoute);

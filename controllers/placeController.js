@@ -39,31 +39,45 @@ module.exports = {
 
   getPlaces: async (req, res, next) => {
     try {
-      const Places = await Place.find(
-        {}, "_id rating review imageUrl title country_id" );
+      const limitParams = req.query.limit;
+
+
+      let query = Place.find({}, "_id rating review imageUrl title country_id location" );
+
+      if(limitParams !== 'all'){
+        const limit = parseInt(limitParams) || 5;
+        query = query.limit(limit);
+      }
+
+
+
+      const Places = await query.exec();
 
       res.status(200).json({ Places });
+
     } catch (error) {
       return next(error);
     }
   },
+  
 
   getPlace: async (req, res, next) => {
     const placeId = req.params.id;
 
 
     try {
-      const Place = await Place.findById(placeId,{   _v: 0,createdAt: 0,updatatedAt: 0,})
+      const place = await Place.findById(placeId,{   _v: 0,createdAt: 0,updatatedAt: 0,})
         .populate({
       path: "popular",
       select: "title rating view imageUrl location",
     })
 
-      res.status(200).json({ Place });
+      res.status(200).json({ place });
     } catch (error) {
       return next(error);
     }
   },
+
 
   getPlaceByCountry: async (req, res, next) => {
     const countryId = req.params.id
@@ -86,8 +100,8 @@ module.exports = {
     }
   },
 
+
   search: async (req, res, next) => {
- 
     try {
         const results = await Place.aggregate(
             [

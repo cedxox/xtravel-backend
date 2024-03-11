@@ -44,17 +44,22 @@ module.exports = {
 
     getHotelByCountry: async (req, res, next) => {
         const countryId = req.params.id;
+        const limitParam = req.query.limit;
+
+
+        const limit = parseInt(limitParam)
 
     
-
         try {
-            const hotels = await Hotel.find({country_id: countryId})
+            const hotels = await Hotel.find({country_id: countryId}, "_id  rating  review  imageUrl  title  country_id  location")
+            .limit(limit)
+
 
             if(hotels.length === 0){
                 return res.status(200).json([]);
             }
 
-            return res.status(200).json(hotels)
+            res.status(200).json(hotels)
         } catch (error) {
             return next(error)
         }
@@ -68,7 +73,7 @@ module.exports = {
             const hotel = await Hotel.findById(hotelId)
             .populate({
                 path: 'reviews',
-                options: { limit: 10 },
+                options: { limit: 2 },
                 select: 'rating review updatedAt user',
 
                 populate: {

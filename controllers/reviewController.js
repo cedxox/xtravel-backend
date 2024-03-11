@@ -18,14 +18,16 @@ module.exports = {
           place,
           review,
           rating,
-          user,
+          user
         });
 
         await newReview.save();
 
 
         const hotel = await Hotel.findById(place)
-        hotel.review.push
+        hotel.review.push(newReview._id)
+
+        await hotel.save();
       }
 
       res.status(200).json({ status: true });
@@ -38,7 +40,7 @@ module.exports = {
     const placeId = req.params.id;
 
     try {
-        const places = await Review.find({place: placeId}, {createdAt: 0, _v: 0})
+        const places = await Review.find({place: placeId}, {createdAt: 0, __v: 0})
         .populate({
             path:'user',
             select:'username profile'

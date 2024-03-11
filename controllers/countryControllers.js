@@ -1,6 +1,18 @@
 const Country = require("../models/Country");
 
 module.exports = {
+
+  deleteCountry: async (req, res, next) => {
+    try {
+      await Country.findByIdAndDelete(req.country.id);
+
+      res.status(200).json({ status: true, message: "User successfuly deleted" });
+    } catch (error) {
+      return next(error);
+    }
+  },
+
+
   addCountry: async (req, res, next) => {
     const { country, description, imageUrl, region, popular } = req.body;
 
@@ -64,6 +76,8 @@ res.status(200).json({status: true});
       return next(error);
     }
   },
+
+  
 
   getCountry: async (req, res, next) => {
     const countryId = req.params.id;

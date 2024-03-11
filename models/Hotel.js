@@ -43,7 +43,7 @@ const HotelSchema = new mongoose.Schema(
         },
 
         {
-            air_con: {type: Boolean, default: true}
+            ac: {type: Boolean, default: true}
         },
 
         {
